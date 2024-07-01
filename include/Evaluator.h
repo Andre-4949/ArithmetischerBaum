@@ -15,6 +15,17 @@ using namespace std;
 class Evaluator {
 
 public:
+
+    /**
+     * Takes a given string exp and parses it with:
+     *      "<": Prefix
+     *      ">": Postfix
+     *      "|": Infix
+     * Notation. It will print out the different notations, the amount of nodes of the tree, its depth and an ascii
+     * representation with the root of the arithmetic tree lying on the right
+     * @param exp mathematical expression
+     * @param mode prefix("<") / postfix(">") / infix("|")
+     * */
     void evaluate(string exp, char mode) {
 
         Tokenizer *t = new Tokenizer(exp);
@@ -50,6 +61,11 @@ public:
     }
 
 private:
+    /**
+     * parses tokenized expression from tok with given mode
+     * @param tok vector of tokenized expression
+     * @param mode prefix("<") / postfix(">") / infix("|")
+     * */
     Token *parse(vector<Token *> *tok, char mode) {
         vector<Token *> i = *tok;
         switch (mode) {
@@ -62,6 +78,11 @@ private:
         }
     }
 
+    /**
+     * Parses in prefix order.
+     * Inserting prefix is just in order of the given tokens.
+     * @param tokens parsed tokens
+     * */
     Token *parsePrefix(vector<Token *> tokens) {
         Token * root = tokens[0];
         tokens.erase(tokens.begin());
@@ -72,6 +93,14 @@ private:
         return root;
     }
 
+
+    /**
+     * Parses in postfix order.
+     * Inserting postfix is linke inserting in prefix,
+     * but starting from the back of the vector and changing
+     * the preferred side on which the new element should be inserted.
+     * @param tokens parsed tokens
+     * */
     Token *parsePostfix(vector<Token *> tokens) {
         Token * root = tokens[tokens.size()-1];
         tokens.erase(tokens.end());
@@ -80,16 +109,27 @@ private:
             tokens.erase(tokens.end());
         }
         return root;
-
-
-        return new Num(); // remove this line
     }
 
+
+    /**
+     * Parses in Infix order.
+     * Infix is special as the operator is in the middle of the expression,
+     * therefore we have to split the expression at "+" or "-" and "*" or "/" if there
+     * is no "+" or "-". For this splitting there is Util::splitVectorAtOperator
+     * The then returned list contains [operator, expressionLeft, expressionRight].
+     * This list is partially in preorder, which means the operator can be inserted.
+     * If the expression on the left or right is just a single character,
+     * the character is inserted into the tree. Otherwise these characters will also be
+     * split and the cycle repeats.
+     *
+     * @param tokens tokens in infix notation
+     * */
     Token *parseInfix(vector<Token *> tokens) {
-        deque<vector<Token*>> tokensToInsert = Util::splitVectorAtOperator(tokens);
-        Token* start = tokensToInsert[0][0];
+        deque<vector<Token *>> tokensToInsert = Util::splitVectorAtOperator(tokens);
+        Token *start = tokensToInsert[0][0];
         tokensToInsert.erase(tokensToInsert.begin());
-        while (!tokensToInsert.empty()){
+        while (!tokensToInsert.empty()) {
             if(tokensToInsert[0].size()>1){
                 deque<vector<Token*>> newTokensToInsert = Util::splitVectorAtOperator(tokensToInsert[0]);
                 tokensToInsert.erase(tokensToInsert.begin());

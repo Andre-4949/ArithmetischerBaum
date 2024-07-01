@@ -1,0 +1,11 @@
+#ignore
+*
+
+#dont ignore
+!CMakeLists.txt
+!.gitignore
+!LICENSE
+!README.md
+!*.cpp
+!*.h
+!*.hpp

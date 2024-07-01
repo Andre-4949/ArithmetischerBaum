@@ -8,8 +8,8 @@ int main() {
     Tokenizer tokenizer = Tokenizer("((2+3)*(5+(4*4)))");
     auto vec = *tokenizer.tokenize();
     Evaluator evaluator = Evaluator();
-    //10 4 5*+84 12 / 1 -/
-    evaluator.evaluate("((2+3)*(5+(4*4)))+(7*8-(9/3)+(10/10))", ' ');
+    //((2+3)*(5+(4*4)))+(7*8-(9/3)+(10/10))
+    evaluator.evaluate("((2+3)*(5+(4*4)))", '|');
     cout << endl;
 
 //    std::queue<Token *> preOrder;

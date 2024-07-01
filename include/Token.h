@@ -34,24 +34,44 @@ public:
 
     void order(Order *o);
 
+
+    /**
+     * This method is implemented in the individual classes, that derive from Token
+     *
+     * see Operator for more, implementation in Num is minimal
+     **/
     virtual bool insertPrefix(Token *t) {
         return this->insertPrefix(t);
     }
 
+    /**
+     * This method is implemented in the individual classes, that derive from Token
+     *
+     * used for visualization
+     * **/
     virtual string toString(){
         return "";
     }
 
+    /**
+     * This method is implemented in the individual classes, that derive from Token
+     *
+     * see Operator for more, implementation in Num is minimal
+     **/
     virtual bool insertPostfix(Token *t) {
         return this->insertPostfix(t);
     }
 
+    /**
+     * reverse inorder ( right, root, left)
+     * print root, spacing gets bigger the deeper the tree is traversed
+     **/
     void print(Token *root, int space) {
         if (root == NULL)
             return;
-//        int count = 10;
-//        space += count;
-        space*=2;
+        int count = 10;
+        space += count;
+    //        space*=2;
         print(root->getRight(), space);
         cout << endl;
         for (int i = 10; i < space; i++)

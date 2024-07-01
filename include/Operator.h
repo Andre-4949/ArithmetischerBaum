@@ -27,6 +27,7 @@ public:
 
     Token *getRight() { return right; }
 
+    // evaluates tree based on value of operator
     int eval() {
         int result = this->left->eval();
         switch (this->value) {
@@ -46,15 +47,18 @@ public:
         return result;
     }
 
+    // returns tree in prefix order
     string prefix() {
         return value + this->left->prefix() + this->right->prefix();
     }
 
+    // returns tree in infix order
     string infix() {
         return "(" + this->left->infix() + value + this->right->infix() + ")";
 
     }
 
+    // returns tree in postfix order
     string postfix() {
         return this->left->postfix() + this->right->postfix() + value;
     }
@@ -63,19 +67,23 @@ public:
         int nodesLeft = left->type == 'n' ? 1 : left->nodes();
         int nodesRight = right->type == 'n' ? 1 : right->nodes();
         return nodesLeft + 1 + nodesRight;//+1 fuer Elternknoten
-//        return 1;
     }
 
     int depth() {
         return max(left->depth() + 1, right->depth() + 1);
     }
 
-    void order(Order *o) {
-        left->order(o);
-        setOrd(++o->counter);
-        right->order(o);
-    }
 
+    /**
+     * Inserts Token with two rules:
+     *      try left
+     *      if left is nothing insert on the left
+     *      if left is something but it is an operator try inserting on the left of that operator
+     *      if token has been inserted, return true
+     *      if the left hasn't worked try right
+     *      start over and apply rules from the top again until Token is inserted or tree has been traversed and the function returns false
+     *      if returned false, arithmetic tree if full.
+     * */
     bool insertPrefix(Token *t) {
         bool hasBeenInserted = false;
         if (left == nullptr) {
@@ -96,6 +104,17 @@ public:
         return hasBeenInserted;
     }
 
+
+    /**
+     * Inserts Token with two rules:
+     *      try right
+     *      if right is nothing insert on the left
+     *      if right is something but it is an operator try inserting on the right of that operator
+     *      if token has been inserted, return true
+     *      if the right hasn't worked try left
+     *      start over and apply rules from the top again until Token is inserted or tree has been traversed and the function returns false
+     *      if returned false, arithmetic tree if full.
+     * */
     bool insertPostfix(Token *t) override {
         bool hasBeenInserted = false;
         if (right == nullptr) {
