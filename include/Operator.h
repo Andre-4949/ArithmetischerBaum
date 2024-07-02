@@ -75,7 +75,7 @@ public:
 
 
     /**
-     * Inserts Token with two rules:
+     * Inserts Token with these rules:
      *      try left
      *      if left is nothing insert on the left
      *      if left is something but it is an operator try inserting on the left of that operator
@@ -106,7 +106,7 @@ public:
 
 
     /**
-     * Inserts Token with two rules:
+     * Inserts Token with these rules:
      *      try right
      *      if right is nothing insert on the left
      *      if right is something but it is an operator try inserting on the right of that operator

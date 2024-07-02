@@ -96,7 +96,7 @@ private:
 
     /**
      * Parses in postfix order.
-     * Inserting postfix is linke inserting in prefix,
+     * Inserting postfix is like inserting in prefix,
      * but starting from the back of the vector and changing
      * the preferred side on which the new element should be inserted.
      * @param tokens parsed tokens

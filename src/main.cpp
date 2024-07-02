@@ -9,7 +9,7 @@ int main() {
     auto vec = *tokenizer.tokenize();
     Evaluator evaluator = Evaluator();
     //((2+3)*(5+(4*4)))+(7*8-(9/3)+(10/10))
-    evaluator.evaluate("((2+3)*(5+(4*4)))", '|');
+    evaluator.evaluate("2 3 +5 4 4 *+*7 8 *9 3 /-10 10 /++", '>');
     cout << endl;
 
 //    std::queue<Token *> preOrder;
