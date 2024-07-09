@@ -4,43 +4,34 @@
 #include "Util.h"
 #include "../include/Evaluator.h"
 
-int main() {
-    Tokenizer tokenizer = Tokenizer("((2+3)*(5+(4*4)))");
-    auto vec = *tokenizer.tokenize();
+int main(int argc, const char *argv[]) {
+    std::string expression;
+    char mode;
+
+    if (argc < 3) {
+        std::cout << "As no defaults args were provided, please enter them now or cancel the input with ctrl+c."
+                  << std::endl;
+        std::cout << "In which mode do you want your string to be parsed:\n\t< Prefix\n\t> Postfix\n\t| Infix\n\n"
+                  << std::endl;
+        std::cin >> mode;
+        std::cin.ignore();
+        std::cout << "Insert your expression:" << std::endl;
+        std::getline(std::cin, expression);
+    } else {
+        mode = argv[1][0];
+        if (!(mode == '>' | mode == '<' | mode == '|')) {
+            std::cout
+                    << "Mode has been parsed wrong. if this keeps happening try to use this programm without parameters and use the input process that will be proposed."
+                    << std::endl;
+            return -1;
+        }
+        for (int i = 2; i < argc; ++i) {
+            expression.append(argv[i]).append(" ");
+        }
+    }
     Evaluator evaluator = Evaluator();
     //((2+3)*(5+(4*4)))+(7*8-(9/3)+(10/10))
-    evaluator.evaluate("2 3 +5 4 4 *+*7 8 *9 3 /-10 10 /++", '>');
+    evaluator.evaluate(expression, mode);
     cout << endl;
-
-//    std::queue<Token *> preOrder;
-//    deque<vector<Token *>> tokensToInsert = Util::splitVectorAtOperator(vec);
-//    Token *start = tokensToInsert[0][0];
-//    tokensToInsert.erase(tokensToInsert.begin());
-//    while (!tokensToInsert.empty()) {
-//        if (tokensToInsert[0].size() > 1) {
-//            deque<vector<Token *>> newTokensToInsert = Util::splitVectorAtOperator(tokensToInsert[0]);
-//            tokensToInsert.erase(tokensToInsert.begin());
-//            std::reverse(newTokensToInsert.begin(), newTokensToInsert.end());
-//
-//            for (const auto &item: newTokensToInsert) {
-//                tokensToInsert.insert(tokensToInsert.begin(), item);
-//            }
-//        } else {
-//            start->insertPrefix(tokensToInsert[0][0]);
-//            preOrder.push(tokensToInsert[0][0]);
-////                std::cout << tokensToInsert[0][0]->value << std::endl;
-//            tokensToInsert.erase(tokensToInsert.begin());
-//        }
-//    }
-//    while (!preOrder.empty()) {
-//        if(preOrder.front()->type=='n')
-//            std::cout << ((Num*)preOrder.front())->number;
-//        else
-//            std::cout << (char)preOrder.front()->value;
-//        preOrder.pop();
-//    }
-
-
-
     return 0;
 }

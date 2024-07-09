@@ -12,6 +12,18 @@
 
 class Util {
 public:
+    /**
+     * infix to prefix converter basically:
+     * works by following these rules:
+     * -skips brackets
+     * -if can split at + or -, then do this, as multiplying or dividing is a stronger bond (this is the best description i can think of)
+     * -if can't split at + or -, split at * or /
+     * -if index(the index at which the tokens are split), is -1 recursively parse deeper into the bracket structure until a number is found
+     * -if index is not -1, split at -1, put operator in the beginning, the left part in the second spot and the right part at the end. ([operator], [infix expression on the left], [infix expression on the right])
+     *
+     * Note:
+     * - this will be applied by the parseInfix method until there is no more of the infix expressions left
+     * */
     static std::deque<std::vector<Token *>> splitVectorAtOperator(std::vector<Token *> tokens) {
         int openBrackets = 0;
         int index = -1;

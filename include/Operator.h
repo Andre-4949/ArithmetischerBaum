@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include "Token.h"
-
+// previous name: Op
 class Operator : public Token {
 private:
     Token *left, *right;
