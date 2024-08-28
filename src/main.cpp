@@ -7,7 +7,7 @@
 int main(int argc, const char *argv[]) {
     std::string expression;
     char mode;
-
+    //> 10 4 5*+84 12 / 1 -/
     if (argc < 3) {
         std::cout << "As no defaults args were provided, please enter them now or cancel the input with ctrl+c."
                   << std::endl;

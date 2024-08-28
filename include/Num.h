@@ -23,7 +23,7 @@ public:
 
     // returns number as a string with space at the end
     string prefix() {
-        return std::to_string(number)+" ";
+        return std::to_string(number) + " ";
     }
 
     // returns number
@@ -33,7 +33,7 @@ public:
 
     // returns number as a string with space at the end
     string postfix() {
-        return std::to_string(number)+" ";
+        return std::to_string(number) + " ";
     }
 
     // returns false as inserting will not work

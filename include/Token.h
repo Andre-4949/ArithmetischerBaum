@@ -49,7 +49,7 @@ public:
      *
      * used for visualization
      * **/
-    virtual string toString(){
+    virtual string toString() {
         return "";
     }
 
@@ -71,7 +71,7 @@ public:
             return;
         int count = 10;
         space += count;
-    //        space*=2;
+        //        space*=2;
         print(root->getRight(), space);
         cout << endl;
         for (int i = 10; i < space; i++)

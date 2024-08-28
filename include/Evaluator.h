@@ -3,7 +3,6 @@
 #include <vector>
 #include <iterator>
 #include <stack>
-
 #include "Token.h"
 #include "Tokenizer.h"
 #include "Vis.h"
@@ -13,9 +12,7 @@
 using namespace std;
 
 class Evaluator {
-
 public:
-
     /**
      * Takes a given string exp and parses it with:
      *      "<": Prefix
@@ -27,23 +24,23 @@ public:
      * @param mode prefix("<") / postfix(">") / infix("|")
      * */
     void evaluate(string exp, char mode) {
-
         Tokenizer *t = new Tokenizer(exp);
-
-        Token *e = parse(t->tokenize(), mode);
+        std::vector<Token *> tokens;
+        t->tokenize(tokens);
+        Token *e = parse(tokens, mode);
 
         // Testbaum, falls Tokenizer und/oder Parser noch nicht fertig:
         /*
         e = new Operator('+',
-                   new Operator('*',
-                          new Num(2),
-                          new Num(3)),
-                   new Operator('-',
-                          new Operator('/',
-                                 new Num(6),
-                                 new Num(2)),
-                          new Num(1)));
-       */
+                      new Operator('*',
+                                new Num(2),
+                                new Num(3)),
+                      new Operator('-',
+                                new Operator('/',
+                                         new Num(6),
+                                         new Num(2)),
+                                new Num(1)));
+      */
         // Prefix:  + * 2 3 - / 6 2 1 = 8
         // Infix:   ((2 * 3) + ((6 / 2) - 1)) = 8
         // Postfix: 2 3 * 6 2 / 1 - + = 8
@@ -55,7 +52,7 @@ public:
         cout << "Postfix: " << e->postfix() << " = " << e->eval() << endl;
         cout << "#Knoten: " << e->nodes() << endl;
         cout << "Tiefe:   " << e->depth() << endl;
-        ((Operator*)e)->print(e,2);
+        ((Operator *) e)->print(e, 2);
         Vis *v = new Vis(e, Vis::REGULAR); // Layout 1: gleiche Abstände zwischen Knoten
 
     }
@@ -66,15 +63,14 @@ private:
      * @param tok vector of tokenized expression
      * @param mode prefix("<") / postfix(">") / infix("|")
      * */
-    Token *parse(vector<Token *> *tok, char mode) {
-        vector<Token *> i = *tok;
+    Token *parse(vector<Token *> &tok, char mode) {
         switch (mode) {
             case '<':
-                return parsePrefix(i);
+                return parsePrefix(tok);
             case '>':
-                return parsePostfix(i);
+                return parsePostfix(tok);
             default :
-                return parseInfix(i);
+                return parseInfix(tok);
         }
     }
 
@@ -83,16 +79,15 @@ private:
      * Inserting prefix is just in order of the given tokens.
      * @param tokens parsed tokens
      * */
-    Token *parsePrefix(vector<Token *> tokens) {
-        Token * root = tokens[0];
-        tokens.erase(tokens.begin());
-        while(tokens.size()>=1){
+    Token *parsePrefix(vector<Token *> &tokens) {
+        Token *root = tokens[0];
+        tokens.erase(tokens.cbegin());
+        while (tokens.size() >= 1) {
             root->insertPrefix(tokens[0]);
-            tokens.erase(tokens.begin());
+            tokens.erase(tokens.cbegin());
         }
         return root;
     }
-
 
     /**
      * Parses in postfix order.
@@ -101,16 +96,15 @@ private:
      * the preferred side on which the new element should be inserted.
      * @param tokens parsed tokens
      * */
-    Token *parsePostfix(vector<Token *> tokens) {
-        Token * root = tokens[tokens.size()-1];
+    Token *parsePostfix(vector<Token *> &tokens) {
+        Token *root = tokens[tokens.size() - 1];
         tokens.erase(tokens.end());
-        while(tokens.size()>=1){
-            root->insertPostfix(tokens[tokens.size()-1]);
+        while (tokens.size() >= 1) {
+            root->insertPostfix(tokens[tokens.size() - 1]);
             tokens.erase(tokens.end());
         }
         return root;
     }
-
 
     /**
      * Parses in Infix order.
@@ -125,18 +119,18 @@ private:
      *
      * @param tokens tokens in infix notation
      * */
-    Token *parseInfix(vector<Token *> tokens) {
+    Token *parseInfix(vector<Token *> &tokens) {
+        std::cout << "infix" << std::endl;
         deque<vector<Token *>> tokensToInsert = Util::splitVectorAtOperator(tokens);
         Token *start = tokensToInsert[0][0];
-        tokensToInsert.erase(tokensToInsert.begin());
+        tokensToInsert.erase(tokensToInsert.cbegin());
         while (!tokensToInsert.empty()) {
-            if(tokensToInsert[0].size()>1){
-                deque<vector<Token*>> newTokensToInsert = Util::splitVectorAtOperator(tokensToInsert[0]);
+            if (tokensToInsert[0].size() > 1) {
+                deque<vector<Token *>> newTokensToInsert = Util::splitVectorAtOperator(tokensToInsert[0]);
                 tokensToInsert.erase(tokensToInsert.begin());
                 std::reverse(newTokensToInsert.begin(), newTokensToInsert.end());
-
-                for (const auto &item: newTokensToInsert){
-                    tokensToInsert.insert(tokensToInsert.begin(),item);
+                for (const auto &item: newTokensToInsert) {
+                    tokensToInsert.insert(tokensToInsert.cbegin(), item);
                 }
             } else {
                 start->insertPrefix(tokensToInsert[0][0]);
@@ -144,9 +138,6 @@ private:
                 tokensToInsert.erase(tokensToInsert.begin());
             }
         }
-
-
         return start; // remove this line
     }
-
 };

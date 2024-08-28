@@ -10,6 +10,7 @@ class Bracket : public Token {
 public:
 
     Bracket(char t, char value) { type = t, this->value = value; /* cout << "Bracket added: " << t << endl; */}
+
     Bracket(char value) { type = 'b', this->value = value; /* cout << "Bracket added: " << t << endl; */}
 
 

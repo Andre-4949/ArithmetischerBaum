@@ -5,7 +5,6 @@
 #ifndef LABORRECHENBAUM_UTIL_H
 #define LABORRECHENBAUM_UTIL_H
 
-
 #include <vector>
 #include <deque>
 #include "../include/Token.h"
@@ -27,7 +26,7 @@ public:
     static std::deque<std::vector<Token *>> splitVectorAtOperator(std::vector<Token *> tokens) {
         int openBrackets = 0;
         int index = -1;
-        bool splitAtAdditionSubtraction = false;
+        int splitAtAdditionSubtraction = 10;
         for (int i = 0; i < tokens.size() - 1; i++) {
             Token *item = tokens[i];
             if (item->type == 'b') {
@@ -37,13 +36,18 @@ public:
             }
             if (openBrackets >= 1)continue;
             if (item->type == 'o') {
-                if ((item->value == '+' || item->value == '-')) {
+                if ((item->value == '+' || item->value == '-') && splitAtAdditionSubtraction > 1) {
                     index = i;
-                    splitAtAdditionSubtraction = true;
+                    splitAtAdditionSubtraction = 1;
                 }
-                if ((item->value == '*' || item->value == '/') && !splitAtAdditionSubtraction) {
+                if ((item->value == '*' || item->value == '/') && splitAtAdditionSubtraction > 2) {
                     index = i;
-
+                    splitAtAdditionSubtraction = 2;
+                }
+                if ((item->value == '$' || item->value == '^' ||
+                     item->value == '%') && splitAtAdditionSubtraction > 3) {
+                    index = i;
+                    splitAtAdditionSubtraction = 3;
                 }
             }
         }
@@ -59,13 +63,10 @@ public:
         vector<Token *> firstHalf(first, mid);
         vector<Token *> secondHalf(mid + 1, last);
         vector<Token *> middle = {tokens[index]};
-        deque <vector<Token *>> result = {middle, firstHalf, secondHalf};
+        deque<vector<Token *>> result = {middle, firstHalf, secondHalf};
         result.shrink_to_fit();
         return result;
-
     }
-
 };
-
 
 #endif //LABORRECHENBAUM_UTIL_H

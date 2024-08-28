@@ -4,11 +4,12 @@
 #include <iostream>
 #include <string>
 #include "Token.h"
+#include "math.h"
+
 // previous name: Op
 class Operator : public Token {
 private:
     Token *left, *right;
-
 public:
     Operator(char type, char t, Token *l, Token *r) {
         left = l;
@@ -21,7 +22,6 @@ public:
         left = nullptr;
         right = nullptr;
     }
-
 
     Token *getLeft() { return left; }
 
@@ -43,6 +43,15 @@ public:
             case '-':
                 result -= this->right->eval();
                 break;
+            case '^':
+                result = pow(result, this->right->eval());
+                break;
+            case '%':
+                result %= this->right->eval();
+                break;
+            case '$':
+                result = log2(this->right->eval()) / log2(this->left->eval());
+                break;
         }
         return result;
     }
@@ -55,7 +64,6 @@ public:
     // returns tree in infix order
     string infix() {
         return "(" + this->left->infix() + value + this->right->infix() + ")";
-
     }
 
     // returns tree in postfix order
@@ -72,7 +80,6 @@ public:
     int depth() {
         return max(left->depth() + 1, right->depth() + 1);
     }
-
 
     /**
      * Inserts Token with these rules:
@@ -92,9 +99,7 @@ public:
         } else if (left->type == 'o') {
             hasBeenInserted = left->insertPrefix(t);
         }
-
         if (hasBeenInserted)return true;
-
         if (right == nullptr) {
             right = t;
             return true;
@@ -103,7 +108,6 @@ public:
         }
         return hasBeenInserted;
     }
-
 
     /**
      * Inserts Token with these rules:
@@ -123,9 +127,7 @@ public:
         } else if (right->type == 'o') {
             hasBeenInserted = right->insertPostfix(t);
         }
-
         if (hasBeenInserted)return true;
-
         if (left == nullptr) {
             left = t;
             return true;
@@ -136,9 +138,8 @@ public:
     }
 
     string toString() override {
-        return string(1,value);
+        return string(1, value);
     }
-
 };
 
 #endif //OpDef
